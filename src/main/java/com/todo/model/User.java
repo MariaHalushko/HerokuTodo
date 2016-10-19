@@ -1,47 +1,47 @@
 package com.todo.model;
 
+import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by mary on 17.10.16.
- */
-
-
 @Entity
-@Table(schema = "public",name="users")
+@Table(schema = "public", name = "users")
 public class User {
 
 
     @Id
     @Column(name = "id")
-    @SequenceGenerator(name="auto_id_user",
-            sequenceName="auto_id_user",
-            allocationSize=1)
+    @SequenceGenerator(name = "auto_id_user",
+            sequenceName = "auto_id_user",
+            allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator="auto_id_user")
+            generator = "auto_id_user")
+    @Expose
     private Long id;
 
 
     @Column(name = "firstName")
+    @Expose
     private String firstName;
 
 
     @Column(name = "lastName")
+    @Expose
     private String lastName;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
     @Fetch(FetchMode.SELECT)
     @JoinColumn(
             name = "user_id",
             nullable = false
     )
-    private List<Task> tasks;
+    private List<Task> tasks = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -81,6 +81,6 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +'}';
+                ", lastName='" + lastName + '\'' + '}';
     }
 }

@@ -1,7 +1,6 @@
 package com.todo.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.google.gson.annotations.Expose;
 import com.todo.model.enums.Status;
 
 import javax.persistence.*;
@@ -18,19 +17,24 @@ public class Task {
             allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator="auto_id_task")
+    @Expose
     private Long id;
 
     @Column(name = "name")
+    @Expose
     private String name;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
+    @Expose
     private Status status;
 
     @Column(name = "startDate")
+    @Expose
     private Date startDate;
 
     @Column(name = "estimationMinutes")
+    @Expose
     private Integer estimationMinutes;
 
 
@@ -40,8 +44,6 @@ public class Task {
             updatable = false,
             insertable = false
     )
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class,
-            property = "user_id")
     private User user;
 
 
