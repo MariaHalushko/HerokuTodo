@@ -1,11 +1,4 @@
-# Excel java js app
-
-### options:
--  uplod *.xls file
--  save *.xls file to remout db;
--  view list of uploded files
--  edit uploded and saved files
--  delete uploded files from db
+# Todo list java app
 
 ### Technologes used:
 
