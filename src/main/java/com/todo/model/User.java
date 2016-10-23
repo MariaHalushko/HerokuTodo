@@ -13,7 +13,6 @@ import java.util.List;
 @Table(schema = "public", name = "users")
 public class User {
 
-
     @Id
     @Column(name = "id")
     @SequenceGenerator(name = "auto_id_user",
@@ -24,11 +23,9 @@ public class User {
     @Expose
     private Long id;
 
-
     @Column(name = "firstName")
     @Expose
     private String firstName;
-
 
     @Column(name = "lastName")
     @Expose
@@ -75,6 +72,13 @@ public class User {
         this.tasks = tasks;
     }
 
+    public User(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public User() {
+    }
 
     @Override
     public String toString() {

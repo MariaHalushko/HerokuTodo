@@ -12,51 +12,54 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 public abstract class AbstractDao<PK extends Serializable, T> implements GenericDao<PK, T> {
-	
-	private final Class<T> persistentClass;
-	
-	@SuppressWarnings("unchecked")
-	public AbstractDao(){
-		this.persistentClass =(Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-	}
-	
-	@Autowired
-	private SessionFactory sessionFactory;
 
-	protected Session getSession(){
-		return sessionFactory.getCurrentSession();
-	}
+    private final Class<T> persistentClass;
 
-	@SuppressWarnings("unchecked")
-	@Override
-	@Transactional
-	public T findById(PK key) {
-		return (T) getSession().get(persistentClass, key);
-	}
+    @SuppressWarnings("unchecked")
+    public AbstractDao() {
+        this.persistentClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	@Transactional
-	public List<T> listAll(){
-		Criteria criteria = createEntityCriteria();
-		return (List<T>) criteria.list();
-	}
+    @Autowired
+    private SessionFactory sessionFactory;
 
-	@Override
-	@Transactional
-	public void save(T entity) {
-		getSession().saveOrUpdate(entity);
-	}
+    protected Session getSession() {
+        return sessionFactory.getCurrentSession();
+    }
 
-	@Override
-	@Transactional
-	public void delete(T entity) {
-		getSession().delete(entity);
-	}
-	
-	protected Criteria createEntityCriteria(){
-		return getSession().createCriteria(persistentClass, persistentClass.getName());
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional
+    public T findById(PK key) {
+        return (T) getSession().get(persistentClass, key);
+    }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional
+    public List<T> listAll() {
+        Criteria criteria = createEntityCriteria();
+        return (List<T>) criteria.list();
+    }
 
+    @Override
+    @Transactional
+    public void save(T entity) {
+        getSession().saveOrUpdate(entity);
+    }
+
+    @Override
+    @Transactional
+    public void delete(T entity) {
+        getSession().delete(entity);
+    }
+
+    protected Criteria createEntityCriteria() {
+        return getSession().createCriteria(persistentClass, persistentClass.getName());
+    }
+
+    @Override
+    public void update(T entity) {
+        getSession().persist(entity);
+    }
 }

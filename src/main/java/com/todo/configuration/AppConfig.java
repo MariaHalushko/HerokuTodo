@@ -37,12 +37,16 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     }
 
     @Override
-    public void configureMessageConverters(List<HttpMessageConverter < ? >> converters) {
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
-        gsonHttpMessageConverter.setGson(new GsonBuilder()
-                .registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY)
-                .setPrettyPrinting()
-                .create());
+        gsonHttpMessageConverter.setGson(
+                new GsonBuilder()
+                        .excludeFieldsWithoutExposeAnnotation()
+                        .setPrettyPrinting()
+                        .create()
+        );
+
+        //Gson gson = new GsonBuilder().excludeFieldsWithModifiers(Modifier.STATIC).create();
         converters.add(gsonHttpMessageConverter);
     }
 

@@ -9,57 +9,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Excel editor</title>
+    <title>Todo list</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/resources/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 </head>
 <body>
 
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <h2 align="center">Строка управления</h2>
-            <input type="file" id="files" name="files[]" multiple accept="application/vnd.ms-excel"/>
-            <h2 align="center">Загруженные файлы</h2>
+            <h2 align="center">USERS <i class="fa fa-plus" id="add_user"></i></h2>
+
+            <div class="form-group">
+                <input class="form-control" id="user_search" type="text">
+            </div>
             <br>
-            <div id="control"></div>
+            <div>
+                <ul class="list-group" id="user_list">
+
+                </ul>
+            </div>
         </div>
         <div class="col-md-8">
-            <br>
-            <div class="row" >
-                <div class="col-xs-6">
-                    <input class="form-control input-lg" id="title" type="text" value="Название таблицы">
-                </div>
-                <div class="col-xs-3">
-                    <button type="button" id="save" class="btn btn-success btn-block btn-lg">Сохранить</button>
-                </div>
-                <div class="col-xs-3">
-                    <button type="button" id="delete" class="btn btn-danger btn-block btn-lg">Удалить</button>
-                </div>
-
-            </div>
-            <br>
             <div class="row">
-                <div id="noContentAlert" class="modal fade">
-                    <div class="modal-dialog">
-                    <div class="modal-content alert alert-danger"><h2 align="center">Таблица пустая</h2></div>
-                    </div>
-                </div>
-                <div id="saveAlert" class="modal fade">
-                    <div class="modal-dialog">
-                        <div class="modal-content alert alert-success"><h2 align="center">Таблица успешно сохранена</h2></div>
-                    </div>
-                </div>
-                <div id="deleteAlert" class="modal fade">
-                    <div class="modal-dialog">
-                        <div class="modal-content alert alert-success"><h2 align="center">Таблица успешно удалена</h2></div>
-                    </div>
+                <h2 align="center">TASKS <i class="fa fa-plus"></i></h2>
+                <div class="form-group">
+                    <input class="form-control" id="task_search" type="text">
                 </div>
             </div>
+            <br>
             <table class="table table-bordered">
-                <thead id="head"></thead>
-                <tbody id="body"></tbody>
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Comment</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Estimation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>john@example.com</td>
+                    <td>john@example.com</td>
+                    <td>john@example.com</td>
+                </tr>
+                <tr>
+                    <td>Mary</td>
+                    <td>Moe</td>
+                    <td>mary@example.com</td>
+                    <td>mary@example.com</td>
+                    <td>mary@example.com</td>
+                </tr>
+                <tr>
+                    <td>July</td>
+                    <td>Dooley</td>
+                    <td>july@example.com</td>
+                    <td>july@example.com</td>
+                    <td>july@example.com</td>
+                </tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -71,9 +84,25 @@
 <script src="/resources/js/jquery.min.js"></script>
 <script src="/resources/js/bootstrap.js"></script>
 <script>
+
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/api/users/read/all",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            statusCode: {
+                200: function (data) {
+                    data.forEach(function(user) {
+                        $('#user_list').append('<li class="list-group-item">'+user.firstName+' '+user.lastName+'<span class="badge">12</span></li>');
+                    });
+                }
+            }
+        });
+    });
+
     var worksheet;
     var loadedTables;
-
 
 
     function handleFileSelect(evt) {
@@ -95,31 +124,31 @@
                 worksheet = workbook.Sheets[first_sheet_name];
                 destroyTable();
                 drowTable(worksheet);
-                $('#delete').attr("name","");
-                $('#save').attr("name","");
+                $('#delete').attr("name", "");
+                $('#save').attr("name", "");
             };
             reader.readAsBinaryString(f);
         }
     }
     document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
-    $(document).ready(function (){
+    $(document).ready(function () {
         downlodAndDrowLeftBar();
     });
 
-    $('#delete').click(function(){
-        if($('#head').html() === "" || $('#body').html() === ""){
+    $('#delete').click(function () {
+        if ($('#head').html() === "" || $('#body').html() === "") {
             var popup = $('#noContentAlert');
             popup.modal("show");
-            setTimeout(function(){
+            setTimeout(function () {
                 popup.modal("hide");
-            },1000);
+            }, 1000);
             return;
         }
         var table = {};
-        if(this.name!=="") {
+        if (this.name !== "") {
             table.id = this.name;
-        }else{
+        } else {
             destroyTable();
             $('#deleteAlert').show().fadeOut(1500);
             return;
@@ -138,27 +167,27 @@
                     destroyTable();
                     var popup = $('#deleteAlert');
                     popup.modal("show");
-                    setTimeout(function(){
+                    setTimeout(function () {
                         popup.modal("hide");
-                    },1000);
+                    }, 1000);
                 }
             }
         });
     });
 
-    $('#save').click(function(){
-        if($('#head').html() === "" || $('#body').html() === ""){
+    $('#save').click(function () {
+        if ($('#head').html() === "" || $('#body').html() === "") {
             var popup = $('#noContentAlert');
             popup.modal("show");
-            setTimeout(function(){
+            setTimeout(function () {
                 popup.modal("hide");
-            },1000);
+            }, 1000);
             return;
         }
         var table = {};
         table.name = $('#title').val();
         table.content = JSON.stringify(worksheet);
-        if(this.name!=="") table.id = this.name;
+        if (this.name !== "") table.id = this.name;
         $.ajax({
             type: "POST",
             url: "/save",
@@ -170,21 +199,21 @@
                     downlodAndDrowLeftBar();
                     var popup = $('#saveAlert');
                     popup.modal("show");
-                    setTimeout(function(){
+                    setTimeout(function () {
                         popup.modal("hide");
-                    },1000);
+                    }, 1000);
                 }
             }
         });
     });
 
-    var destroyTable = function(){
+    var destroyTable = function () {
         $('#title').val("Введите название таблицы");
         var head = $('#head').html("");
         var body = $('#body').html("");
     };
 
-    var drowTable = function(table){
+    var drowTable = function (table) {
         var head = $('#head');
         var body = $('#body');
         var newHead = '<tr>';
@@ -247,7 +276,7 @@
         });
     };
 
-    var downlodAndDrowLeftBar = function(){
+    var downlodAndDrowLeftBar = function () {
         $.ajax({
             type: "POST",
             url: "/read/all",
@@ -255,20 +284,20 @@
             dataType: "json",
             success: function (response) {
                 loadedTables = response;
-                var body="";
-                for(var i in response){
-                    body += ('<div><button type="button" name="'+i+'" class="btn btn-default btn-block loaded">');
-                    body+= response[i].name;
+                var body = "";
+                for (var i in response) {
+                    body += ('<div><button type="button" name="' + i + '" class="btn btn-default btn-block loaded">');
+                    body += response[i].name;
                     body += '</button></div>';
                 }
                 $('#control').html("").append(body);
-                $('.loaded').click(function(){
+                $('.loaded').click(function () {
                     worksheet = JSON.parse(loadedTables[this.name].content);
                     destroyTable();
                     drowTable(JSON.parse(loadedTables[this.name].content));
                     $('#title').val(loadedTables[this.name].name);
-                    $('#delete').attr("name",response[this.name].id);
-                    $('#save').attr("name",response[this.name].id);
+                    $('#delete').attr("name", response[this.name].id);
+                    $('#save').attr("name", response[this.name].id);
                 })
             }
         });

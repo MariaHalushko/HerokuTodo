@@ -7,22 +7,26 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(schema = "public",name="tasks")
+@Table(schema = "public", name = "tasks")
 public class Task {
 
     @Id
     @Column(name = "id")
-    @SequenceGenerator(name="auto_id_task",
-            sequenceName="auto_id_task",
-            allocationSize=1)
+    @SequenceGenerator(name = "auto_id_task",
+            sequenceName = "auto_id_task",
+            allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator="auto_id_task")
+            generator = "auto_id_task")
     @Expose
     private Long id;
 
     @Column(name = "name")
     @Expose
     private String name;
+
+    @Column(name = "comment")
+    @Expose
+    private String comment;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -96,5 +100,13 @@ public class Task {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

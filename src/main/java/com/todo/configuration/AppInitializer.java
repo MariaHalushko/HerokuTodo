@@ -10,21 +10,21 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
-public class AppInitializer  implements WebApplicationInitializer  {
+public class AppInitializer implements WebApplicationInitializer {
 
-	private static final String DISPATCHER_SERVLET_NAME = "dispatcher";
+    private static final String DISPATCHER_SERVLET_NAME = "dispatcher";
 
-	@Override
-	public void onStartup(ServletContext servletContext) throws ServletException {
-		AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
-		ctx.register(AppConfig.class);
-		servletContext.addListener(new ContextLoaderListener(ctx));
-		servletContext.addFilter("openEntityManagerInView", new OpenEntityManagerInViewFilter());
-		ctx.setServletContext(servletContext);
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
+        ctx.register(AppConfig.class);
+        servletContext.addListener(new ContextLoaderListener(ctx));
+        servletContext.addFilter("openEntityManagerInView", new OpenEntityManagerInViewFilter());
+        ctx.setServletContext(servletContext);
 
-		ServletRegistration.Dynamic servlet = servletContext.addServlet(DISPATCHER_SERVLET_NAME, new DispatcherServlet(ctx));
-		servlet.addMapping("/");
-		servlet.setLoadOnStartup(1);
-	}
+        ServletRegistration.Dynamic servlet = servletContext.addServlet(DISPATCHER_SERVLET_NAME, new DispatcherServlet(ctx));
+        servlet.addMapping("/");
+        servlet.setLoadOnStartup(1);
+    }
 
 }
