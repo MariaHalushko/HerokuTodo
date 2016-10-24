@@ -11,19 +11,20 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-public abstract class AbstractDao<PK extends Serializable, T> implements GenericDao<PK, T> {
+abstract class AbstractDao<PK extends Serializable, T> implements GenericDao<PK, T> {
 
     private final Class<T> persistentClass;
 
     @SuppressWarnings("unchecked")
-    public AbstractDao() {
+    AbstractDao() {
         this.persistentClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
     }
 
     @Autowired
     private SessionFactory sessionFactory;
 
-    protected Session getSession() {
+
+    Session getSession() {
         return sessionFactory.getCurrentSession();
     }
 
@@ -54,7 +55,7 @@ public abstract class AbstractDao<PK extends Serializable, T> implements Generic
         getSession().delete(entity);
     }
 
-    protected Criteria createEntityCriteria() {
+    Criteria createEntityCriteria() {
         return getSession().createCriteria(persistentClass, persistentClass.getName());
     }
 

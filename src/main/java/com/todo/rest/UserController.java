@@ -82,11 +82,11 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/read/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity listAll(@RequestParam(value="page",required = false,defaultValue = "1") Integer page,
             @RequestParam(value="per_page",required = false,defaultValue = "20") Integer perPage,
             @RequestParam(value="searchString",required = false) String searchString) {
-        List<User> result = userDao.listAll();
+        List<User> result = userDao.getWithFilter(searchString,page,perPage);
 
         if (result.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
