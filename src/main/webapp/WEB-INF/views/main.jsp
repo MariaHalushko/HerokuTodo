@@ -21,59 +21,54 @@
     <div class="row">
         <div class="col-md-4">
             <h2 align="center">USERS <i class="fa fa-plus " data-toggle="modal" data-target="#myModal"></i></h2>
-
-            <div class="form-group">
-                <input class="form-control" id="user_search" type="text">
-            </div>
+            <%--<div class="form-group">--%>
+            <%--<input class="form-control" id="user_search" type="text">--%>
+            <%--</div>--%>
             <br>
             <div>
-                <ul class="list-group" id="user_list">
-
-                </ul>
+                <ul class="list-group" id="user_list"></ul>
             </div>
         </div>
         <div class="col-md-8">
             <div class="row">
-                <h2 align="center">TASKS <i class="fa fa-plus"></i></h2>
-                <div class="form-group">
-                    <input class="form-control" id="task_search" type="text">
-                </div>
+                <h2 align="center">TASKS <i class="fa fa-plus" data-toggle="modal" data-target="#addTaskModal"></i></h2>
+                <%--<div class="form-group">--%>
+                <%--<input class="form-control" id="task_search" type="text">--%>
+                <%--</div>--%>
             </div>
             <br>
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Comment</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Estimation</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
-                    <td>john@example.com</td>
-                    <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                    <td>mary@example.com</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
-                    <td>july@example.com</td>
-                    <td>july@example.com</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="card card-block">
+                        <h4 class="card-title">Card No 1</h4>
+                        <p class="card-text">The Size of the Card is 4 cells in Medium Devices.</p>
+                        <button type="button" class="btn btn-primary btn-sm">
+                            <i class="fa fa-pencil-square-o"></i></button>
+                        <button type="button" class="btn btn-danger btn-sm">
+                            <i class="fa fa-times"> </i></button>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card card-block">
+                        <h4 class="card-title">Card No 2</h4>
+                        <p class="card-text">The Size of the Card is 3 Cells in Medium Devices.</p>
+                        <button type="button" class="btn btn-primary btn-sm">
+                            <i class="fa fa-pencil-square-o"></i></button>
+                        <button type="button" class="btn btn-danger btn-sm">
+                            <i class="fa fa-times"> </i></button>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card card-block">
+                        <h4 class="card-title">Card No 3</h4>
+                        <p class="card-text">The Size of the Card is 3 Cells in Medium Devices</p>
+                        <button type="button" class="btn btn-primary btn-sm">
+                            <i class="fa fa-pencil-square-o"></i></button>
+                        <button type="button" class="btn btn-danger btn-sm">
+                            <i class="fa fa-times"> </i></button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -88,10 +83,31 @@
                 </div>
                 <div class="modal-body">
                     <p><input class="form-control input-sm" name="firstName" placeholder="First name" type="text"></p>
-                    <p><input class="form-control input-sm" name="lastName" placeholder="Last name"  type="text"></p>
+                    <p><input class="form-control input-sm" name="lastName" placeholder="Last name" type="text"></p>
                 </div>
                 <div class="modal-footer">
                     <button id="add_user" type="button" class="btn btn-success" data-dismiss="modal">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- Modal -->
+        <div class="modal fade" id="addTaskModal" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add task</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p><input class="form-control input-sm" name="Title" placeholder="Title" type="text"></p>
+                        <p><input class="form-control input-sm" name="Date" placeholder="11.12.14" type="text"></p>
+                        <p><input class="form-control input-sm" name="Comment" placeholder="Comment" type="text"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="add_task" type="button" class="btn btn-success" data-dismiss="modal">Add</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -148,7 +164,7 @@
         $('.delete').click(function () {
             $.ajax({
                 type: "DELETE",
-                url: "/api/users/delete/"+this.name,
+                url: "/api/users/delete/" + this.name,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 statusCode: {
@@ -181,7 +197,5 @@
         $("input[name='lastName']").val('');
 
     });
-
-
 </script>
 </html>
