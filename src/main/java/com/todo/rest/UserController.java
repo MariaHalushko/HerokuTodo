@@ -21,19 +21,6 @@ import java.util.Random;
 @RequestMapping("api/users")
 public class UserController {
 
-//
-//    public static void main(String[] args) {
-//        System.out.println(new Random().nextInt(3));
-//        System.out.println(new Random().nextInt(3));
-//        System.out.println(new Random().nextInt(3));
-//        System.out.println(new Random().nextInt(3));
-//        System.out.println(new Random().nextInt(3));
-//        System.out.println(new Random().nextInt(3));
-//        System.out.println(new Random().nextInt(3));
-//
-//    }
-
-
     @Autowired
     private UserDao userDao;
 
@@ -80,7 +67,6 @@ public class UserController {
         userDao.update(user);
         return new ResponseEntity<>("updated", HttpStatus.OK);
     }
-
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity listAll(@RequestParam(value="page",required = false,defaultValue = "1") Integer page,

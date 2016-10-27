@@ -60,7 +60,8 @@ abstract class AbstractDao<PK extends Serializable, T> implements GenericDao<PK,
     }
 
     @Override
+    @Transactional
     public void update(T entity) {
-        getSession().persist(entity);
+        getSession().update(entity);
     }
 }

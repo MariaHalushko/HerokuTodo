@@ -23,7 +23,6 @@ public class UserDaoImpl extends AbstractDao<Long, User> implements UserDao {
         Session session = getSession();
         SQLQuery query = session.createSQLQuery("Select * FROM tasks WHERE user_id=:userId").addEntity(Task.class);
         query.setLong("userId", userId);
-        query.executeUpdate();
         return query.list();
     }
 
