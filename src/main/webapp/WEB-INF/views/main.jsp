@@ -35,47 +35,15 @@
             <br>
             <div class="col-sm-4" id="open-tasks">
                 <h3 align="center">Open</h3>
-                <div class="card card-block todo" id="todo">
-                    <input class="form-control input-lg"
-                           style="border: none; overflow: auto; outline: none; box-shadow: none;" value="Title"/>
-                    <textarea class="form-control" rows="4"
-                              style="border: none; overflow: auto; outline: none; box-shadow: none;">The Size of the Card is 4 cells in Medium Devices.</textarea>
-                    <br>
-                    <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fa fa-pencil-square-o"></i></button>
-                    <button type="button" class="btn btn-danger btn-sm">
-                        <i class="fa fa-times"> </i></button>
-                </div>
-                <div class="card card-block todo">
-                    <h4 class="card-title">Title</h4>
-                    <p class="card-text">The Size of the Card is 4 cells in Medium Devices.</p>
-                    <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fa fa-pencil-square-o"></i></button>
-                    <button type="button" class="btn btn-danger btn-sm">
-                        <i class="fa fa-times"> </i></button>
-                </div>
+                <div id="todo"></div>
             </div>
             <div class="col-sm-4" id="in-progress-tasks">
                 <h3 align="center">In progress</h3>
-                <div class="card card-block in-progress" id="progress">
-                    <h4 class="card-title">Card No 2</h4>
-                    <p class="card-text">The Size of the Card is 3 Cells in Medium Devices.</p>
-                    <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fa fa-pencil-square-o"></i></button>
-                    <button type="button" class="btn btn-danger btn-sm">
-                        <i class="fa fa-times"> </i></button>
-                </div>
+                <div id="progress"></div>
             </div>
             <div class="col-sm-4" id="done-tasks">
                 <h3 align="center">Done</h3>
-                <div class="card card-block done" id="done">
-                    <h4 class="card-title">Card No 3</h4>
-                    <p class="card-text">The Size of the Card is 3 Cells in Medium Devices</p>
-                    <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fa fa-pencil-square-o"></i></button>
-                    <button type="button" class="btn btn-danger btn-sm">
-                        <i class="fa fa-times"> </i></button>
-                </div>
+                <div id="done"></div>
             </div>
         </div>
     </div>
@@ -127,7 +95,6 @@
     </div>
 
     <div class="container">
-        <!-- Modal -->
         <div class="modal fade" id="addTaskModal" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -171,7 +138,7 @@
                 }
             }
         });
-    }
+    };
 
     var createUsersList = function (users) {
         document.getElementById("user_list").innerHTML = "";
@@ -194,9 +161,11 @@
                     + '</div>'
                     + '</li>');
         });
+
         $('.view').click(function () {
-            alert('view ' + this.name);
+            getUsersTasks(this.name);
         });
+
         $('.edit').click(function () {
             $("input[name='edit_firstName']").val($("p[name='firstName" + this.name + "']").text());
             $("input[name='edit_lastName']").val($("p[name='lastName" + this.name + "']").text());
@@ -216,6 +185,130 @@
             });
         });
     };
+
+    var getUsersTasks = function (name) {
+        $.ajax({
+            type: "GET",
+            url: "/api/users/" + name + "/tasks",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            statusCode: {
+                200: function (data) {
+                    console.dir(data);
+                    displayUsersTask(data);
+                }
+            }
+        });
+    };
+
+    var displayUsersTask = function (tasks) {
+        document.getElementById("todo").innerHTML = "";
+        document.getElementById("progress").innerHTML = "";
+        document.getElementById("done").innerHTML = "";
+        tasks.forEach(function (task) {
+            if (task.status == "OPEN") {
+                displayOpenTask(task);
+            } else if (task.status == "IN_PROGRESS") {
+                displayInProgressTask(task);
+            } else if (task.status == "DONE") {
+                displayDoneTask(task);
+            }
+        });
+    };
+
+    var displayOpenTask = function (task) {
+        $('#todo').append('<div class="card card-block todo"> '
+                + '<input  name = "' + task.id + '" class="form-control input-lg" style="border: none; overflow: auto; outline: none; box-shadow: none;" value="'
+                + task.name + '"/>'
+                + '<textarea  name = "' + task.id + '" class="form-control" rows = "4" style = "border: none; overflow: auto; outline: none; box-shadow: none;" > '
+                + task.comment
+                + '</textarea> '
+                + '<br >'
+                + '<p > <input class="form-control input-sm" style = "display:none" name = "task_id" type = "text" value="'+task.id+'" > </p>'
+                + '<button type = "button"  name = "' + task.id + '" class = "remove-task btn btn-danger btn-sm" >'
+                + '<i class = "fa fa-times" > </i> </button>'
+                + ' </div>');
+    };
+
+    var displayInProgressTask = function (task) {
+        $('#progress').append('<div class="card card-block in-progress" name = "' + task.id + '" > '
+                + '<input name = "' + task.id + '" class="form-control input-lg" style="border: none; overflow: auto; outline: none; box-shadow: none;" value="'
+                + task.name + '"/>'
+                + '<textarea name = "' + task.id + '" class="form-control" rows = "4" style = "border: none; overflow: auto; outline: none; box-shadow: none;" > '
+                + task.comment
+                + '</textarea> '
+                + '<br >'
+                + '<p > <input class="form-control input-sm" style = "display:none" name = "task_id" type = "text" value="'+task.id+'" > </p>'
+                + '<button type = "button"  name = "' + task.id + '" class = "remove-task btn btn-danger btn-sm" >'
+                + '<i class = "fa fa-times" > </i> </button>'
+                + ' </div>');
+
+//        $('.remove-task').click(function () {
+//            alert("sdfsdf "+this.name);
+//            $.ajax({
+//                type: "DELETE",
+//                url: "/api/tasks/delete/" +567,
+//                contentType: "application/json; charset=utf-8",
+//                dataType: "json",
+//                statusCode: {
+//                    200: function () {
+//                        console.dir("delete");
+//                        getUsersTasks();
+//                    }
+//                }
+//            });
+//        });
+    };
+
+    var displayDoneTask = function (task) {
+        $('#done').append('<div class="card card-block done" > '
+                + '<input name = "' + task.id + '" class="form-control input-lg" style="border: none; overflow: auto; outline: none; box-shadow: none;" value="'
+                + task.name + '"/>'
+                + '<textarea name = "' + task.id + '" class="form-control" rows = "4" style = "border: none; overflow: auto; outline: none; box-shadow: none;" > '
+                + task.comment
+                + '</textarea> '
+                + '<br>'
+                + '<p> <input class="form-control input-sm" style = "display:none" name = "task_id" type = "text" value="'+task.id+'" > </p>'
+                + '<button type = "button" name = "' + task.id + '" class = "remove-task btn btn-danger btn-sm" >'
+                + '<i class = "fa fa-times" > </i> </button>'
+                + ' </div>');
+    };
+
+
+    $('.remove-task').click(function () {
+        var taskId = $("input[name='task_id']").val();
+            alert("sdfsdf "+ taskId);
+            $.ajax({
+                type: "DELETE",
+                url: "/api/tasks/delete/" +567,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                statusCode: {
+                    200: function () {
+                        console.dir("delete");
+                        getUsersTasks();
+                    }
+                }
+            });
+        });
+
+    //    $('.remove-task').click(function () {
+//        var taskId = $("input[name='task_id']").val();
+//        alert(taskId);
+//        $.ajax({
+//            type: "DELETE",
+//            url: "/api/tasks/delete/" + taskId,
+//            contentType: "application/json; charset=utf-8",
+//            dataType: "json",
+//            statusCode: {
+//                200: function () {
+//                    console.dir("delete")
+//                    getUsersTasks();
+//                }
+//            }
+//        });
+//    });
+
 
     $('#add_user').click(function () {
         var user = {};

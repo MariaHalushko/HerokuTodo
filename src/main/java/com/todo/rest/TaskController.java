@@ -27,41 +27,6 @@ public class TaskController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    //    @RequestMapping(value = "/done", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity doneTask(@RequestParam(value="page",required = false,defaultValue = "1") Integer page,
-//                                  @RequestParam(value="per_page",required = false,defaultValue = "10") Integer perPage,
-//                                  @RequestParam(value="searchString",required = false) String searchString) {
-//        List<Task> result = taskDao.getWithFilter(searchString,page,perPage, Status.DONE);
-//
-//        if (result.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<>(result, HttpStatus.OK);
-//    }
-//
-//    @RequestMapping(value = "/open", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity openTask(@RequestParam(value="page",required = false,defaultValue = "1") Integer page,
-//                                  @RequestParam(value="per_page",required = false,defaultValue = "10") Integer perPage,
-//                                  @RequestParam(value="searchString",required = false) String searchString) {
-//        List<Task> result = taskDao.getWithFilter(searchString,page,perPage, Status.OPEN);
-//
-//        if (result.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<>(result, HttpStatus.OK);
-//    }
-//
-//    @RequestMapping(value = "/inprogress", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity inProgress(@RequestParam(value="page",required = false,defaultValue = "1") Integer page,
-//                                  @RequestParam(value="per_page",required = false,defaultValue = "10") Integer perPage,
-//                                  @RequestParam(value="searchString",required = false) String searchString) {
-//        List<Task> result = taskDao.getWithFilter(searchString,page,perPage, Status.IN_PROGRESS);
-//
-//        if (result.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<>(result, HttpStatus.OK);
-//    }
 
     @RequestMapping(value = "/get/{taskId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity get(@PathVariable("taskId") Long taskId) {
