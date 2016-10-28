@@ -77,7 +77,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Add user</h4>
+                        <h4 class="modal-title">Edit user</h4>
                     </div>
                     <div class="modal-body">
                         <p><input class="form-control input-sm" name="edit_firstName" placeholder="First name"
@@ -195,13 +195,13 @@
             statusCode: {
                 200: function (data) {
                     console.dir(data);
-                    displayUsersTask(data);
+                    displayUsersTask(name,data);
                 }
             }
         });
     };
 
-    var displayUsersTask = function (tasks) {
+    var displayUsersTask = function (id,tasks) {
         document.getElementById("todo").innerHTML = "";
         document.getElementById("progress").innerHTML = "";
         document.getElementById("done").innerHTML = "";
@@ -214,6 +214,21 @@
                 displayDoneTask(task);
             }
         });
+        $('.remove-task').click(function () {
+            alert("sdfsdf " + this.name);
+            $.ajax({
+                type: "DELETE",
+                url: "/api/tasks/delete/" + this.name,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                statusCode: {
+                    200: function () {
+                        console.dir("delete");
+                        getUsersTasks(id);
+                    }
+                }
+            });
+        });
     };
 
     var displayOpenTask = function (task) {
@@ -224,7 +239,7 @@
                 + task.comment
                 + '</textarea> '
                 + '<br >'
-                + '<p > <input class="form-control input-sm" style = "display:none" name = "task_id" type = "text" value="'+task.id+'" > </p>'
+                + '<p > <input class="form-control input-sm" style = "display:none" name = "task_id" type = "text" value="' + task.id + '" > </p>'
                 + '<button type = "button"  name = "' + task.id + '" class = "remove-task btn btn-danger btn-sm" >'
                 + '<i class = "fa fa-times" > </i> </button>'
                 + ' </div>');
@@ -238,26 +253,10 @@
                 + task.comment
                 + '</textarea> '
                 + '<br >'
-                + '<p > <input class="form-control input-sm" style = "display:none" name = "task_id" type = "text" value="'+task.id+'" > </p>'
+                + '<p > <input class="form-control input-sm" style = "display:none" name = "task_id" type = "text" value="' + task.id + '" > </p>'
                 + '<button type = "button"  name = "' + task.id + '" class = "remove-task btn btn-danger btn-sm" >'
                 + '<i class = "fa fa-times" > </i> </button>'
                 + ' </div>');
-
-//        $('.remove-task').click(function () {
-//            alert("sdfsdf "+this.name);
-//            $.ajax({
-//                type: "DELETE",
-//                url: "/api/tasks/delete/" +567,
-//                contentType: "application/json; charset=utf-8",
-//                dataType: "json",
-//                statusCode: {
-//                    200: function () {
-//                        console.dir("delete");
-//                        getUsersTasks();
-//                    }
-//                }
-//            });
-//        });
     };
 
     var displayDoneTask = function (task) {
@@ -268,46 +267,48 @@
                 + task.comment
                 + '</textarea> '
                 + '<br>'
-                + '<p> <input class="form-control input-sm" style = "display:none" name = "task_id" type = "text" value="'+task.id+'" > </p>'
+                + '<p> <input class="form-control input-sm" style = "display:none" name = "task_id" type = "text" value="' + task.id + '" > </p>'
                 + '<button type = "button" name = "' + task.id + '" class = "remove-task btn btn-danger btn-sm" >'
                 + '<i class = "fa fa-times" > </i> </button>'
                 + ' </div>');
     };
 
 
-    $('.remove-task').click(function () {
-        var taskId = $("input[name='task_id']").val();
-            alert("sdfsdf "+ taskId);
-            $.ajax({
-                type: "DELETE",
-                url: "/api/tasks/delete/" +567,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                statusCode: {
-                    200: function () {
-                        console.dir("delete");
-                        getUsersTasks();
-                    }
-                }
-            });
-        });
+    //    $('.remove-task').click(function () {
+    //        console.dir("click ");
+    //        var taskId = $("input[name='task_id']").val();
+    //            alert("sdfsdf "+ taskId);
+    //        console.dir("click " + taskId);
+    ////            $.ajax({
+    ////                type: "DELETE",
+    ////                url: "/api/tasks/delete/" +567,
+    ////                contentType: "application/json; charset=utf-8",
+    ////                dataType: "json",
+    ////                statusCode: {
+    ////                    200: function () {
+    ////                        console.dir("delete");
+    ////                        getUsersTasks();
+    ////                    }
+    ////                }
+    ////            });
+    //        });
 
     //    $('.remove-task').click(function () {
-//        var taskId = $("input[name='task_id']").val();
-//        alert(taskId);
-//        $.ajax({
-//            type: "DELETE",
-//            url: "/api/tasks/delete/" + taskId,
-//            contentType: "application/json; charset=utf-8",
-//            dataType: "json",
-//            statusCode: {
-//                200: function () {
-//                    console.dir("delete")
-//                    getUsersTasks();
-//                }
-//            }
-//        });
-//    });
+    //        var taskId = $("input[name='task_id']").val();
+    //        alert(taskId);
+    //        $.ajax({
+    //            type: "DELETE",
+    //            url: "/api/tasks/delete/" + taskId,
+    //            contentType: "application/json; charset=utf-8",
+    //            dataType: "json",
+    //            statusCode: {
+    //                200: function () {
+    //                    console.dir("delete")
+    //                    getUsersTasks();
+    //                }
+    //            }
+    //        });
+    //    });
 
 
     $('#add_user').click(function () {
@@ -321,6 +322,31 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(user),
+            statusCode: {
+                200: function () {
+                    getUsers();
+                }
+            }
+        });
+        $("input[name='firstName']").val();
+        $("input[name='lastName']").val('');
+
+    });
+
+    $('#add_task').click(function () {
+        var task = {};
+        task.name = $("input[name='Title']").val();
+        task.startDate = $("input[name='Date']").val();
+        task.comment = $("input[name='Comment']").val();
+        task.status = "OPEN";
+
+        alert("task " + JSON.stringify(task));
+        $.ajax({
+            type: "POST",
+            url: "/api/tasks/save",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(task),
             statusCode: {
                 200: function () {
                     getUsers();

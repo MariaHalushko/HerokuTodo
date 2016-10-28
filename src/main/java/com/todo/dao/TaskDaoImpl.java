@@ -14,10 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Repository()
+@Repository
 public class TaskDaoImpl extends AbstractDao<Long, Task> implements TaskDao {
 
     @Override
+    @Transactional
     public void delete(Long id) {
         Session session = getSession();
         session.getTransaction().begin();
