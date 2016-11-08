@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/resources/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.css">
 </head>
 <body>
 
@@ -104,8 +105,18 @@
                     </div>
                     <div class="modal-body">
                         <p><input class="form-control input-sm" name="Title" placeholder="Title" type="text"></p>
-                        <p><input class="form-control input-sm" name="Date" placeholder="11.12.14" type="text"></p>
+                        <p>
+                            <div class="form-group">
+                                <div class='input-group date' id='datetimepicker1'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                     </span>
+                                </div>
+                            </div>
+                        </p>
                         <p><input class="form-control input-sm" name="Comment" placeholder="Comment" type="text"></p>
+                        <p><input class="form-control input-sm" style="display:none" name="user_id" type="text"></p>
                     </div>
                     <div class="modal-footer">
                         <button id="add_task" type="button" class="btn btn-success" data-dismiss="modal">Add</button>
@@ -120,10 +131,15 @@
 <script src='/resources/js/xls.core.min.js'></script>
 <script src="/resources/js/jquery.min.js"></script>
 <script src="/resources/js/bootstrap.js"></script>
+<script src="/resources/js/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
 <script>
 
     $(document).ready(function () {
         getUsers();
+        $(function () {
+            $('#datetimepicker1').datetimepicker();
+        });
     });
 
     var getUsers = function () {
@@ -164,6 +180,7 @@
 
         $('.view').click(function () {
             getUsersTasks(this.name);
+            $("input[name='user_id']").val(this.name);
         });
 
         $('.edit').click(function () {
@@ -195,13 +212,13 @@
             statusCode: {
                 200: function (data) {
                     console.dir(data);
-                    displayUsersTask(name,data);
+                    displayUsersTask(name, data);
                 }
             }
         });
     };
 
-    var displayUsersTask = function (id,tasks) {
+    var displayUsersTask = function (id, tasks) {
         document.getElementById("todo").innerHTML = "";
         document.getElementById("progress").innerHTML = "";
         document.getElementById("done").innerHTML = "";
@@ -215,7 +232,7 @@
             }
         });
         $('.remove-task').click(function () {
-            alert("sdfsdf " + this.name);
+            //alert("sdfsdf " + this.name);
             $.ajax({
                 type: "DELETE",
                 url: "/api/tasks/delete/" + this.name,
@@ -273,44 +290,6 @@
                 + ' </div>');
     };
 
-
-    //    $('.remove-task').click(function () {
-    //        console.dir("click ");
-    //        var taskId = $("input[name='task_id']").val();
-    //            alert("sdfsdf "+ taskId);
-    //        console.dir("click " + taskId);
-    ////            $.ajax({
-    ////                type: "DELETE",
-    ////                url: "/api/tasks/delete/" +567,
-    ////                contentType: "application/json; charset=utf-8",
-    ////                dataType: "json",
-    ////                statusCode: {
-    ////                    200: function () {
-    ////                        console.dir("delete");
-    ////                        getUsersTasks();
-    ////                    }
-    ////                }
-    ////            });
-    //        });
-
-    //    $('.remove-task').click(function () {
-    //        var taskId = $("input[name='task_id']").val();
-    //        alert(taskId);
-    //        $.ajax({
-    //            type: "DELETE",
-    //            url: "/api/tasks/delete/" + taskId,
-    //            contentType: "application/json; charset=utf-8",
-    //            dataType: "json",
-    //            statusCode: {
-    //                200: function () {
-    //                    console.dir("delete")
-    //                    getUsersTasks();
-    //                }
-    //            }
-    //        });
-    //    });
-
-
     $('#add_user').click(function () {
         var user = {};
         user.firstName = $("input[name='firstName']").val();
@@ -333,30 +312,86 @@
 
     });
 
-    $('#add_task').click(function () {
-        var task = {};
-        task.name = $("input[name='Title']").val();
-        task.startDate = $("input[name='Date']").val();
-        task.comment = $("input[name='Comment']").val();
-        task.status = "OPEN";
+    //    var getUserById = function (id) {
+    //        var user = {};
+    //        $.ajax({
+    //            type: "GET",
+    //            url: "/api/users/get/" + id,
+    //            contentType: "application/json; charset=utf-8",
+    //            dataType: "json",
+    //            statusCode: {
+    //                200: function (data) {
+    //                    alert("user" + JSON.stringify(data));
+    ////                    user = data;
+    //                    console.dir("user " + data)
+    //                    return JSON.stringify(data);
+    //                }
+    //            }
+    //        });
+    //    };
 
-        alert("task " + JSON.stringify(task));
-        $.ajax({
-            type: "POST",
-            url: "/api/tasks/save",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify(task),
-            statusCode: {
-                200: function () {
-                    getUsers();
+        $('#add_task').click(function () {
+            var id = $("input[name='user_id']").val();
+            alert(id);
+            var task = {};
+            task.name = $("input[name='Title']").val();
+            task.startDate = $('#datetimepicker1').data('date');
+            task.comment = $("input[name='Comment']").val();
+            task.status = "OPEN";
+
+    //        task.user = (getUserById($("input[name='user_id']").val()));
+    //        console.dir(JSON.stringify(task.user));
+    //        console.dir(task.user);
+
+            alert("task " + JSON.stringify(task));
+    //        $.ajax({
+    //            type: "POST",
+    //            url: "/api/tasks/save",
+    //            contentType: "application/json; charset=utf-8",
+    //            dataType: "json",
+    //            data: JSON.stringify(task),
+    //            statusCode: {
+    //                200: function () {
+    //                    console.dir("ok tasks");
+    //                }
+    //            }
+    //        });
+
+    //        var tasks = [];
+    //        tasks.push(task);
+    //        tasks.push(task);
+    //        tasks.push(task);
+    //        tasks.push(task);
+    //        var user = {};
+    ////        var user = (getUserById(id));
+    //        user.id = id;
+    //        alert(user);
+    //        user.tasks = tasks;
+
+    //        console.dir("user.tasks" + JSON.stringify(user));
+            console.log({task: JSON.stringify(task), userId: JSON.stringify(id)})
+            $.ajax({
+                type: "PUT",
+                url: "/api/users/add_task?userId="+id,
+    //            url: "/api/users/add_task",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(task),
+
+    //            data: JSON.stringify(task),
+                statusCode: {
+                    200: function () {
+                        console.dir("ok user");
+                        getUsersTasks(id);
+                    }
                 }
-            }
-        });
-        $("input[name='firstName']").val();
-        $("input[name='lastName']").val('');
+            });
 
-    });
+            $("input[name='Title']").val();
+            $("input[name='Date']").val('');
+            $("input[name='Comment']").val('');
+
+        });
 
     $('#edit_user').click(function () {
         var user = {};

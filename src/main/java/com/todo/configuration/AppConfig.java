@@ -42,6 +42,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         gsonHttpMessageConverter.setGson(
                 new GsonBuilder()
                         .excludeFieldsWithoutExposeAnnotation()
+                        .setDateFormat("MM/dd/yyyy HH:mm a")
                         .setPrettyPrinting()
                         .create()
         );

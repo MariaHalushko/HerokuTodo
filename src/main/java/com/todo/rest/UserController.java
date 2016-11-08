@@ -68,6 +68,18 @@ public class UserController {
         return new ResponseEntity<>("updated", HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/add_task", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity add(@RequestBody Task task,
+                              @RequestParam(value="userId") Long userId) {
+        System.out.println(task + " userId " + userId);
+        User user = userDao.findById(userId);
+        System.out.println("user from db "+user+" by id "+ userId);
+//        task.setUser(user);
+//        taskDao.save(task);
+//        taskDao.save(new Task());
+        return new ResponseEntity<>("add task", HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity listAll(@RequestParam(value="page",required = false,defaultValue = "1") Integer page,
             @RequestParam(value="per_page",required = false,defaultValue = "10") Integer perPage,
