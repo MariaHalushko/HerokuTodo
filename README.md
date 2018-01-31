@@ -1,11 +1,9 @@
-# Excel java js app
+# TODO java js app
 
 ### options:
--  uplod *.xls file
--  save *.xls file to remout db;
--  view list of uploded files
--  edit uploded and saved files
--  delete uploded files from db
+-  Add new tasks
+-  Edit/delete tasks
+-  Change task state
 
 ### Technologes used:
 
